@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const { User } = require('../db/models')
 
 const router = express.Router()
@@ -28,6 +29,8 @@ router.post('/users', async (req, res) => {
       middle_name: middleName
     })
     delete user.dataValues.password
+    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: 60 * 60 })
+    user.dataValues.token = token
 
     res.status(201).send(user.dataValues)
   } catch (e) {
