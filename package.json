@@ -8,8 +8,7 @@
     "start": "node server",
     "dev": "nodemon --watch ./server server",
     "lint": "npx eslint .",
-    "lint:autofix": "npx eslint . --fix",
-    "db:makemigrations": "npx makemigration"
+    "lint:autofix": "npx eslint . --fix"
   },
   "author": "",
   "license": "ISC",
