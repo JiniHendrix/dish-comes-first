@@ -1,6 +1,5 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const { User } = require('../db/models')
 
 const router = express.Router()
@@ -29,7 +28,7 @@ router.post('/users', async (req, res) => {
       middle_name: middleName
     })
     delete user.dataValues.password
-    const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: 60 * 60 })
+    const token = user.createToken()
     user.dataValues.token = token
 
     res.status(201).send(user.dataValues)
@@ -39,6 +38,30 @@ router.post('/users', async (req, res) => {
     }
 
     return res.sendStatus(500)
+  }
+})
+
+router.post('/users/login', async (req, res) => {
+  const { username, password } = req.body
+
+  try {
+    const user = await User.findOne({
+      where: {
+        username
+      }
+    })
+
+    if (!user || !(await bcrypt.compare(password, user.dataValues.password))) {
+      res.sendStatus(404)
+    }
+
+    const token = user.createToken()
+    delete user.dataValues.password
+    user.dataValues.token = token
+
+    res.send(user.dataValues)
+  } catch (e) {
+    res.sendStatus(500)
   }
 })
 

@@ -1,7 +1,12 @@
 const { DataTypes, Model } = require('sequelize')
+const jwt = require('jsonwebtoken')
 const sequelize = require('../')
 
-class User extends Model {}
+class User extends Model {
+  createToken () {
+    return jwt.sign({ username: this.dataValues.username }, process.env.JWT_SECRET, { expiresIn: 60 * 60 })
+  }
+}
 
 User.init({
   id: {
