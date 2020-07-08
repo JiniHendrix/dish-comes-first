@@ -65,4 +65,7 @@ router.post('/users/login', async (req, res) => {
   }
 })
 
+// TODO: User delete route, should check if user has a claimed restaurant
+// and remove that user from the restaurant owner
+
 module.exports = router
