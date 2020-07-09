@@ -56,7 +56,26 @@ router.patch('/restaurants/:restaurantId/claim', authMiddleware, async (req, res
   }
 })
 
-// TODO add route where owner can give ownership to another person
+router.patch('/restaurants/:restaurantId/change-owner', authMiddleware, async (req, res) => {
+  try {
+    const dbResponse = await Restaurant.update({
+      owner_id: req.body.newOwnerId
+    }, {
+      where: {
+        id: req.params.restaurantId,
+        owner_id: req.body.currentOwnerId
+      }
+    })
+
+    if (dbResponse[0] === 0) {
+      throw new Error()
+    }
+
+    res.sendStatus(204)
+  } catch (e) {
+    res.sendStatus(404)
+  }
+})
 
 // TODO: add delete route where it can only be deleted by the owner
 // TODO: add update route where it can only be updated by the owner
