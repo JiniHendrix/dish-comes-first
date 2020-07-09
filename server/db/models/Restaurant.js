@@ -1,8 +1,10 @@
 const { DataTypes, Model } = require('sequelize')
 const sequelize = require('../')
+const { User } = require('./')
 
 class Restaurant extends Model {}
 
+// TODO: add latitude, longitude
 Restaurant.init({
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
@@ -45,6 +47,21 @@ Restaurant.init({
   },
   email: {
     type: DataTypes.STRING
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: sequelize.fn('NOW')
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: sequelize.fn('NOW')
+  },
+  owner_id: {
+    type: DataTypes.INTEGER.UNSIGNED,
+    references: {
+      model: User,
+      key: 'id'
+    }
   }
 }, { sequelize })
 
