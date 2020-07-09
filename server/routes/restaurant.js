@@ -96,6 +96,24 @@ router.delete('/restaurants/:restaurantId', authMiddleware, async (req, res) => 
   }
 })
 
-// TODO: add update route where it can only be updated by the owner
+router.patch('/restaurants/:restaurantId', authMiddleware, async (req, res) => {
+  try {
+    const dbResponse = await Restaurant.update(
+      req.body, {
+        where: {
+          id: req.params.restaurantId,
+          owner_id: req.user.id
+        }
+      })
+
+    if (dbResponse[0] === 0) {
+      throw new Error()
+    }
+
+    res.sendStatus(204)
+  } catch (e) {
+    res.sendStatus(404)
+  }
+})
 
 module.exports = router
